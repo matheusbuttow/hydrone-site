@@ -113,20 +113,21 @@
   .member-card .socials a{color:#374151; font-weight:500; font-size:0.9rem; padding:4px 8px; border-radius:4px; background:#f3f4f6; transition:background 0.2s;}
   .member-card .socials a:hover{background:#e5e7eb; color:#ea580c;}
 
-  /* Estilo do Banner Easter Egg */
+  /* Estilo da Imagem do Easter Egg */
   #ginfo-egg {
     position: fixed;
-    bottom: -100px;
+    bottom: -150px;
     left: 50%;
     transform: translateX(-50%);
-    background: #f97316;
-    color: white;
-    padding: 12px 24px;
+    width: 120px; /* Altere o tamanho da imagem aqui se preferir */
+    height: auto;
     border-radius: 8px;
-    font-weight: bold;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
     transition: bottom 0.4s ease-in-out;
     z-index: 9999;
+    background: white;
+    padding: 6px;
+    border: 2px solid #f97316;
   }
   #ginfo-egg.show {
     bottom: 24px;
@@ -135,8 +136,8 @@
 </head>
 <body>
 
-<!-- Notificação do Easter Egg -->
-<div id="ginfo-egg">🚀 Easter Egg Desbloqueado: Salve ao Ginfo / FURG! 🤖</div>
+<!-- Imagem do Easter Egg (Altere o src="assets/sua-imagem.png" para a imagem desejada) -->
+<img id="ginfo-egg" src="assets/hhh.png" alt="Easter Egg Ginfo">
 
 <!-- ===================== CABEÇALHO ===================== -->
   <section id="Header">
@@ -151,7 +152,7 @@
 
         <!-- Logo Hydrone + Nome -->
         <div class="logo-area">
-          <img src="assets/logo_hydrone.jpeg" alt="Hydrone Logo">
+          <img src="assets/logo_hydrone_1.svg" alt="Hydrone Logo">
           <span class="wordmark" id="ginfo-trigger">Hydrone</span>
         </div>
       </div>
@@ -429,7 +430,7 @@
   <!-- Script do Easter Egg (Triplo Clique no Ginfo) -->
   <script>
     const trigger = document.getElementById('ginfo-trigger');
-    const egg = document.getElementById('ginfo-egg');
+    const egg = document.getElementById('assets/hhh.png');
     let clickCount = 0;
     let timer = null;
 
