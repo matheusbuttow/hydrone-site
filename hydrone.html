@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hydrone - FBOT</title>
+<style>
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family: ui-sans-serif, system-ui, Arial, sans-serif; color:#111827;}
+  a{color:inherit; text-decoration:none;}
+  img{display:block; max-width:100%; height:auto;}
+
+  /* ---------- CABEÇALHO ---------- */
+  #Header{position:fixed; width:100%; z-index:1000; top: 0;}
+  #Header .bar{
+    background:#1e293b; height:60px; width:100%;
+    display:flex; align-items:center; justify-content:space-between;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 0 24px;
+  }
+  #Header .logos-container {display:flex; align-items:center; gap:16px;}
+  #Header .logo-area{display:flex; align-items:center; gap:8px;}
+  #Header .logo-area img{height:30px; width:auto;}
+  #Header .logo-area .wordmark{color:#fff; font-weight:800; letter-spacing:.5px; font-size: 1.2rem; cursor:pointer; user-select:none;}
+  #Header nav{display:flex; gap:20px; color:#fff; cursor:pointer;}
+  #Header nav a:hover{color:#f97316; transition: color 0.2s;}
+
+  .logo-divider {
+    width: 1px;
+    height: 24px;
+    background-color: #475569;
+  }
+
+  /* ---------- HERO / APRESENTAÇÃO ---------- */
+  #AboutWork{background:#111827; padding-top: 60px;}
+  #AboutWork .wrap{
+    padding:56px; display:flex; justify-content:center; align-items:center;
+    gap:112px; min-height:100vh; flex-wrap:wrap;
+  }
+  #AboutWork .text-block{display:flex; flex-direction:column; width:33%; min-width:280px; text-align:justify; gap:20px;}
+  #AboutWork h1{color:#fff; font-weight:700; font-size:3rem;}
+  #AboutWork p{color:#fff; font-size:18px;}
+
+  /* hexágono da foto do robô */
+  .hex-wrap{width:400px; height:400px;}
+  .hex-image{
+    width:400px; height:400px; object-fit:cover;
+    clip-path:polygon(25% 5%,75% 5%,100% 50%,75% 95%,25% 95%,0% 50%);
+    background:#1f2937;
+  }
+
+  /* ---------- SEÇÕES GERAIS ---------- */
+  .content{padding:0 16px;}
+  @media(min-width:1024px){ .content{margin:0 144px;} }
+  .section-title{display:flex; justify-content:center; margin:40px 0 24px 0;}
+  .section-title h2{font-size:2.25rem; font-weight:700;}
+
+  /* ---------- VÍDEOS ---------- */
+  .videos-grid{
+    display:grid; grid-template-columns:1fr; gap:16px; margin:20px 0;
+  }
+  @media(min-width:768px){ .videos-grid{grid-template-columns:1fr 1fr;} }
+  @media(min-width:1024px){ .videos-grid{grid-template-columns:1fr 1fr 1fr;} }
+  .videos-grid .video-box{display:flex; justify-content:center;}
+  .videos-grid iframe{width:100%; max-width:480px; aspect-ratio:16/9; margin-bottom:16px;}
+
+  /* ---------- GALERIA DE FOTOS ---------- */
+  .photos-grid{
+    display:grid; grid-template-columns:1fr; gap:16px; margin:20px 0;
+  }
+  @media(min-width:768px){ .photos-grid{grid-template-columns:1fr 1fr;} }
+  @media(min-width:1024px){ .photos-grid{grid-template-columns:1fr 1fr 1fr;} }
+  .photo-item{position:relative; overflow:hidden; aspect-ratio:16/9; cursor:pointer;}
+  .photo-item img{width:100%; height:100%; object-fit:cover; transition:transform .3s, opacity .3s;}
+  .photo-item figcaption{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    opacity:0; transition:opacity .3s; background:rgba(0,0,0,0.4);
+  }
+  .photo-item figcaption p{border:2px solid #fff; color:#fff; padding:8px 16px; font-weight:500;}
+  .photo-item:hover img{transform:scale(1.05); opacity:.2;}
+  .photo-item:hover figcaption{opacity:1;}
+
+  /* ---------- LINHA DO TEMPO ---------- */
+  #Timeline{background:#111827; color:#fff; padding:48px 24px; margin-top:40px;}
+  #Timeline h2{text-align:center; font-size:2.25rem; font-weight:700; margin-bottom:40px;}
+  #Timeline .track{border-left:4px solid #f97316; padding-left:24px; max-width:64rem; margin:0 auto;}
+  #Timeline .year-block{margin-bottom:40px;}
+  #Timeline .year-block h3{font-size:1.875rem; font-weight:700; margin-bottom:12px;}
+  #Timeline ul{list-style:disc; padding-left:16px; color:#d1d5db; display:flex; flex-direction:column; gap:8px;}
+
+  /* ---------- INTEGRANTES ---------- */
+  #Members{background:#f3f4f6; padding:48px 24px;}
+  #Members h2{text-align:center; font-size:2.25rem; font-weight:700; margin-bottom:40px;}
+  .members-grid{
+    display:grid; grid-template-columns:1fr; gap:24px; max-width:72rem; margin:0 auto;
+  }
+  @media(min-width:640px){ .members-grid{grid-template-columns:1fr 1fr;} }
+  @media(min-width:768px){ .members-grid{grid-template-columns:1fr 1fr 1fr;} }
+  .member-card{
+    background:#fff; border:1px solid #e5e7eb; border-radius:.5rem;
+    box-shadow:0 10px 15px -3px rgba(0,0,0,.1);
+    padding:24px; text-align:center; display:flex; flex-direction:column; align-items:center;
+  }
+  .member-card img{
+    width:96px; height:96px; margin:0 auto; border-radius:50%;
+    border:4px solid #f97316; object-fit:cover; background:#e5e7eb;
+  }
+  .member-card h3{color:#ea580c; font-weight:600; font-size:1.25rem; margin-top:16px;}
+  .member-card .role{color:#ea580c; font-weight:600; font-size:0.95rem; margin-top:12px;}
+  .member-card .desc{color:#4b5563; font-weight:500; font-size:0.85rem; margin-top:4px;}
+  .member-card .socials{display:flex; justify-content:center; gap:16px; margin-top:16px;}
+  .member-card .socials a{color:#374151; font-weight:500; font-size:0.9rem; padding:4px 8px; border-radius:4px; background:#f3f4f6; transition:background 0.2s;}
+  .member-card .socials a:hover{background:#e5e7eb; color:#ea580c;}
+
+  /* Estilo do Banner Easter Egg */
+  #ginfo-egg {
+    position: fixed;
+    bottom: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #f97316;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: bold;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    transition: bottom 0.4s ease-in-out;
+    z-index: 9999;
+  }
+  #ginfo-egg.show {
+    bottom: 24px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Notificação do Easter Egg -->
+<div id="ginfo-egg">🚀 Easter Egg Desbloqueado: Salve ao Ginfo / FURG! 🤖</div>
+
+<!-- ===================== CABEÇALHO ===================== -->
+  <section id="Header">
+    <div class="bar">
+      <div class="logos-container">
+        <!-- Logo FBOT -->
+        <a href="#AboutWork" class="logo-area">
+          <img src="assets/logomark.svg" alt="FBOT Logo" style="height: 30px; width: auto;">
+        </a>
+
+        <div class="logo-divider"></div>
+
+        <!-- Logo Hydrone + Nome -->
+        <div class="logo-area">
+          <img src="assets/logo_hydrone.jpeg" alt="Hydrone Logo">
+          <span class="wordmark" id="ginfo-trigger">Hydrone</span>
+        </div>
+      </div>
+
+      <nav>
+        <a href="#AboutWork">About Us</a>
+        <a href="#Members">Team</a>
+        <a href="#Timeline">Timeline</a>
+      </nav>
+    </div>
+  </section>
+
+  <!-- ===================== APRESENTAÇÃO ===================== -->
+  <section id="AboutWork">
+    <div class="wrap">
+      <div class="text-block">
+        <h1>Hydrone</h1>
+        <p>
+          The Brazilian United Team for Intelligent Automation - FBOT@Hydrone was 
+          founded in 2018 by FBOT from Universidade Federal do Rio Grande (FURG). 
+          The team FBOT@Hydrone has already taken part in several national and international 
+          robotics competitions, achieving prominent results such as the 1st place in the 
+          Brazilian Robotics Competition (CBR) - Flying Robots Trial League in 2019. 
+          Besides, we made history by becoming the first Brazilian team to compete in the 
+          drone category of the FIRA RoboWorld Cup, held in Wolfenbüttel, Germany in 2023, 
+          where we secured the 4th position worldwide in the "Air-Emergency Service Indoor" category.
+        </p>
+      </div>
+      <div class="hex-wrap">
+        <img class="hex-image" src="assets/drone.jpeg" alt="Foto do robô da equipe">
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== VÍDEOS ===================== -->
+  <div class="content">
+    <div class="section-title"><h2>Videos</h2></div>
+    <div class="videos-grid">
+      <div class="video-box">
+        <iframe src="https://www.youtube.com/embed/H7MdZqheNVc" allowfullscreen title="Vídeo 1"></iframe>
+      </div>
+      <div class="video-box">
+        <iframe src="https://www.youtube.com/embed/ay_LBgXxt7E" allowfullscreen title="Vídeo 2"></iframe>
+      </div>
+      <div class="video-box">
+        <iframe src="https://www.youtube.com/embed/zBR6YzMcK4E" allowfullscreen title="Vídeo 3"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== FOTOS ===================== -->
+  <div class="content">
+    <div class="section-title"><h2>Photos</h2></div>
+    <div class="photos-grid">
+      <figure class="photo-item">
+        <img src="assets/drone.jpeg" alt="Hydrone Drone">
+        <figcaption><p>Hydrone Drone — 2023</p></figcaption>
+      </figure>
+      <figure class="photo-item">
+        <img src="assets/drone_2.jpeg" alt="Competition">
+        <figcaption><p>Competition — 2023</p></figcaption>
+      </figure>
+      <figure class="photo-item">
+        <img src="assets/drone_base.jpeg" alt="Base Station">
+        <figcaption><p>Base Station — 2023</p></figcaption>
+      </figure>
+      <figure class="photo-item">
+        <img src="assets/drone_rede.jpeg" alt="Testing">
+        <figcaption><p>Testing Arena — 2023</p></figcaption>
+      </figure>
+      <figure class="photo-item">
+        <img src="assets/drone_base.jpeg" alt="Team Work">
+        <figcaption><p>Team Setup — 2022</p></figcaption>
+      </figure>
+      <figure class="photo-item">
+        <img src="assets/drone_base.jpeg" alt="FIRA RoboWorld Cup">
+        <figcaption><p>FIRA RoboWorld Cup — 2023</p></figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <!-- ===================== LINHA DO TEMPO ===================== -->
+  <section id="Timeline">
+    <h2>Timeline</h2>
+    <div class="track">
+      <div class="year-block">
+        <h3>2026</h3>
+        <ul>
+          <li>Participation and consolidation of advanced automation and computer vision projects at FURG.</li>
+        </ul>
+      </div>
+
+      <div class="year-block">
+        <h3>2023</h3>
+        <ul>
+          <li>4th Place in the FIRA RoboWorld Cup (Air-Emergency Service Indoor category).</li>
+          <li>Made history by becoming the first Brazilian team to compete in the drone category of the tournament, held in Wolfenbüttel, Germany.</li>
+        </ul>
+      </div>
+
+      <div class="year-block">
+        <h3>2021</h3>
+        <ul>
+          <li>2nd Place in the Brazilian Robotics Competition (CBR) - Flying Robots Trial League.</li>
+        </ul>
+      </div>
+
+      <div class="year-block">
+        <h3>2019</h3>
+        <ul>
+          <li>1st Place in the Brazilian Robotics Competition (CBR) - Flying Robots Trial League.</li>
+        </ul>
+      </div>
+      
+      <div class="year-block">
+        <h3>2018</h3>
+        <ul>
+          <li>Foundation of the FBOT@Hydrone team at Universidade Federal do Rio Grande (FURG).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== INTEGRANTES ===================== -->
+  <section id="Members">
+    <h2>Team</h2>
+    <div class="members-grid">
+
+      <!-- Othavio -->
+      <div class="member-card">
+        <img src="assets/pessoas/IMG_6838 - Othavio Correa.jpeg" alt="Othavio Christmann Correa">
+        <h3>Othavio Christmann Correa</h3>
+        <p class="role">Computer Vision & AI Engineer</p>
+        <p class="desc">Computer Engineering Student</p>
+        <div class="socials">
+          <a href="https://github.com/othaviocc" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/othaviocorreia" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://www.instagram.com/cc_othavio/" target="_blank" rel="noopener noreferrer">Instagram</a>
+        </div>
+      </div>
+
+      <!-- Luis Henrique -->
+      <div class="member-card">
+        <img src="assets/pessoas/eu - Luis Henrique K. Reichow.png" alt="Luis Henrique Kiekhofel Reichow">
+        <h3>Luis Henrique K. Reichow</h3>
+        <p class="role">Team Leader</p>
+        <p class="desc">Computer Engineering Student</p>
+        <div class="socials">
+          <a href="https://github.com/HenriqueReichow" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/luis-henrique-kiekhofel-reichow-2135342a4/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://www.instagram.com/reichow_henrique" target="_blank" rel="noopener noreferrer">Instagram</a>
+        </div>
+      </div>
+
+      <!-- Patrick -->
+      <div class="member-card">
+        <img src="assets/pessoas/IMG_20251215_212608_078 - Patrick Guasti Vande Meerssche.jpeg" alt="Patrick Guasti Vande Meerssche">
+        <h3>Patrick Guasti V. Meerssche</h3>
+        <p class="role">Software & Navigation Developer</p>
+        <p class="desc">Computer Engineering Student</p>
+        <div class="socials">
+          <a href="https://github.com/PatrickMeerssche" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/patrickmeerssche" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://www.instagram.com/patrickmeerssche" target="_blank" rel="noopener noreferrer">Instagram</a>
+        </div>
+      </div>
+
+      <!-- Eduardo -->
+      <div class="member-card">
+        <img src="assets/pessoas/IMG-20260902-WA0395 - Eduardo Nunes Rubira.jpg" alt="Eduardo Nunes Rubira">
+        <h3>Eduardo Nunes Rubira</h3>
+        <p class="role">Embedded & Hardware Integrator</p>
+        <p class="desc">Computer Engineering Student</p>
+        <div class="socials">
+          <a href="https://github.com/EduRubira2" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/eduardo-nunes-rubira-118186304" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://www.instagram.com/edurubira" target="_blank" rel="noopener noreferrer">Instagram</a>
+        </div>
+      </div>
+
+      <!-- Matheus -->
+      <div class="member-card">
+        <img src="assets/pessoas/IMG_20260809_171039_Original - matheus buttow(2).jpeg" alt="Matheus Nunes Büttow">
+        <h3>Matheus Nunes Büttow</h3>
+        <p class="role">Computer Vision & AI Engineer</p>
+        <p class="desc">Computer Engineering Student</p>
+        <div class="socials">
+          <a href="https://github.com/matheusbuttow" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/matheus-büttow" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://www.instagram.com/matheusbuttow" target="_blank" rel="noopener noreferrer">Instagram</a>
+        </div>
+      </div>
+
+      <!-- Théo -->
+      <div class="member-card">
+        <img src="assets/pessoas/DSC06175 - Théo Corvello Soares.jpeg" alt="Théo Corvello Soares">
+        <h3>Théo Corvello Soares</h3>
+        <p class="role">Computer Vision & AI Engineer</p>
+        <p class="desc">Computer Engineering Student</p>
+        <div class="socials">
+          <a href="https://github.com/TheoSoares" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://br.linkedin.com/in/theocorvellosoares" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://www.instagram.com/theocsoaress" target="_blank" rel="noopener noreferrer">Instagram</a>
+        </div>
+      </div>
+
+      <!-- Pedro -->
+      <div class="member-card">
+        <img src="assets/pessoas/IMG-20260909-WA2525 - Pedro Vieira.jpg" alt="Pedro de Barros Vieira">
+        <h3>Pedro de Barros Vieira</h3>
+        <p class="role">Embedded & Hardware Integrator</p>
+        <p class="desc">Engineering Student</p>
+        <div class="socials">
+          <a href="https://github.com/pedrobarroseng" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/pedrobarros" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://www.instagram.com/pedrodebarros" target="_blank" rel="noopener noreferrer">Instagram</a>
+        </div>
+      </div>
+
+      <!-- Enzo -->
+      <div class="member-card">
+        <img src="assets/pessoas/IMG-20260818-WA0044(1) - Maisonave Rodrigues.jpg" alt="Enzo Maisonave Rodrigues">
+        <h3>Enzo Maisonave Rodrigues</h3>
+        <p class="role">Embedded & Hardware Integrator</p>
+        <p class="desc">Computer Engineering Student</p>
+        <div class="socials">
+          <a href="https://github.com/enzofurg/" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/enzo-maisonave-rodrigues-73997b2b8" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://www.instagram.com/en.maiso" target="_blank" rel="noopener noreferrer">Instagram</a>
+        </div>
+      </div>
+
+      <!-- Luis Pitter -->
+      <div class="member-card">
+        <img src="assets/pessoas/foto - Luis Pitter Tavares Miranda.jpg" alt="Luis Pitter Tavares Miranda">
+        <h3>Luis Pitter T. Miranda</h3>
+        <p class="role">Embedded & Hardware Integrator</p>
+        <p class="desc">Mechanical Engineering Student</p>
+        <div class="socials">
+          <a href="http://github.com/Azmen1" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/luis-pitter-tavares-miranda-96314015b" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://www.instagram.com/luis_pitter" target="_blank" rel="noopener noreferrer">Instagram</a>
+        </div>
+      </div>
+
+      <!-- Lucas -->
+      <div class="member-card">
+        <img src="assets/pessoas/IMG_5966 - Lucas Castilho.jpeg" alt="Lucas Silva de Castilho">
+        <h3>Lucas Silva de Castilho</h3>
+        <p class="role">Embedded & Hardware Integrator</p>
+        <p class="desc">Master's student in Computer Engineering</p>
+        <div class="socials">
+          <a href="https://github.com/CastilhoL" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/lucas-castilho-012926152" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://www.instagram.com/lucascastilho96" target="_blank" rel="noopener noreferrer">Instagram</a>
+        </div>
+      </div>
+
+      <!-- Ivo Arpino Rasia -->
+      <div class="member-card">
+        <img src="assets/pessoas/1_1 - ivo rasia.png" alt="Ivo Arpino Rasia">
+        <h3>Ivo Arpino Rasia</h3>
+        <p class="role">Software & Systems Developer</p>
+        <p class="desc">Computer Engineering Student</p>
+        <div class="socials">
+          <a href="https://github.com/GatoMonocromatico" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/ivo-rasia-910039281/?locale=pt-BR" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://www.instagram.com/ivoarpino" target="_blank" rel="noopener noreferrer">Instagram</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Script do Easter Egg (Triplo Clique no Ginfo) -->
+  <script>
+    const trigger = document.getElementById('ginfo-trigger');
+    const egg = document.getElementById('ginfo-egg');
+    let clickCount = 0;
+    let timer = null;
+
+    trigger.addEventListener('click', () => {
+      clickCount++;
+      
+      if (clickCount === 1) {
+        timer = setTimeout(() => {
+          clickCount = 0;
+        }, 600); // Janela de tempo de 600ms para os 3 cliques
+      } else if (clickCount === 3) {
+        clearTimeout(timer);
+        clickCount = 0;
+        
+        egg.classList.add('show');
+        setTimeout(() => {
+          egg.classList.remove('show');
+        }, 4000);
+      }
+    });
+  </script>
+
+</body>
+</html>
